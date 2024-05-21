@@ -1,0 +1,29 @@
+CC = gcc
+CXXFLAGS = -Wall -Wextra -Iinclude -lpthread
+
+all: sensor monitor
+
+sensor: sensor.c
+	$(CC) $(CXXFLAGS) $^ -o $@
+
+monitor: monitor.c 
+	$(CC) $(CXXFLAGS) $^ -o $@
+
+run_t: run_sensor_t run_monitor
+
+run_p: run_sensor_p run_monitor
+
+run_sensor_t: sensor
+	
+	@./sensor -t 3 -s 1 -f datos_Temp.txt -p pipeNOM &
+
+run_sensor_p: sensor
+	
+	@./sensor -t 3 -s 2 -f datos_Ph.txt -p pipeNOM &
+
+run_monitor: monitor
+	
+	@./monitor -b 10 -t file-temp.txt -h file-ph.txt -p pipeNOM &
+
+clear:
+		rm -f file-temp.txt file-ph.txt
